@@ -18,3 +18,6 @@
 #     artifact-name: corne_left_with_studio
 #
 ---
+board: [ "seeed_xiao" ]
+shield: [ "caleboard_left", "caleboard_right" ]
+
