@@ -1,0 +1,15 @@
+file_format: "1"
+id: caleboard
+name: caleboard
+type: shield
+url: https://github.com/foostan/crkbd/
+requires:
+  - seeed_xiao
+exposes:
+  # - i2c_oled
+features:
+  - keys
+  # - display
+siblings:
+  - caleboard_left
+  - caleboard_right

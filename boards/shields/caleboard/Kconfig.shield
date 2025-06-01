@@ -1,0 +1,6 @@
+config SHIELD_CALEBOARD_LEFT
+  def_bool $(shields_list_contains, caleboard_left)
+
+config SHIELD_CALEBOARD_RIGHT
+  def_bool $(shields_list_contains, caleboard_right)
+
