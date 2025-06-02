@@ -18,5 +18,6 @@
                               &kp LGUI &kp SPACE   &kp RET &kp RALT
                         /* &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT */
       >;
+    };
   };
 };
