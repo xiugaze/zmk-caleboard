@@ -1,7 +1,7 @@
 if SHIELD_CALEBOARD_LEFT
   config ZMK_KEYBOARD_NAME
     default "caleboard v0.1"
-  config ZMK_SPLIT_ROLE_CENTERAL
+  config ZMK_SPLIT_ROLE_CENTRAL
     default y
 endif
 
