@@ -6,7 +6,7 @@
 # endif
 #
 
-if SHIELD_MY_KEYBOARD_DONGLE
+if SHIELD_CALEBOARD_DONGLE
 
 config ZMK_KEYBOARD_NAME
     default "caleboard v0.1"
