@@ -4,8 +4,8 @@
 
 &mt { // mod-tap
   flavor = "tap-preferred";
-  tapping-term-ms = <300>;
-  quick-tap-ms = <220>;
+  tapping-term-ms = <240>;
+  quick-tap-ms = <150>;
   hold-trigger-key-positions = <0>;
 };
 &lt { // layer tap
