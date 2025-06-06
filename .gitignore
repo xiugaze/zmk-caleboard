@@ -5,3 +5,10 @@
 /build
 result
 /result
+.build
+.direnv
+.west
+modules
+firmware
+zephyr
+zmk

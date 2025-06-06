@@ -1,42 +1,50 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    zmk-nix = {
-      url = "github:lilyinstarlight/zmk-nix";
+    zephyr.url = "github:zmkfirmware/zephyr/v3.5.0+zmk-fixes";
+    zephyr.flake = false;
+
+    zephyr-nix = {
+      url = "github:urob/zephyr-nix";
+      inputs.zephyr.follows = "zephyr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, zmk-nix }: let
-    forAllSystems = nixpkgs.lib.genAttrs (nixpkgs.lib.attrNames zmk-nix.packages);
+  outputs = { self, nixpkgs, zephyr-nix, ... }: let
+    systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+    forAllSystems = nixpkgs.lib.genAttrs systems;
   in {
-    packages = forAllSystems (system: rec {
-      default = firmware;
+    devShells = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+        zephyr = zephyr-nix.packages.${system};
+        # keymap_drawer = pkgs.python3Packages.callPackage ./nix/keymap-drawer.nix {};
+      in {
+        default = pkgs.mkShellNoCC {
+          packages =
+            [
+              zephyr.pythonEnv
+              (zephyr.sdk-0_16.override {targets = ["arm-zephyr-eabi"];})
 
-      firmware = zmk-nix.legacyPackages.${system}.buildSplitKeyboard {
-        name = "firmware";
+              pkgs.cmake
+              pkgs.dtc
+              pkgs.ninja
 
-        src = nixpkgs.lib.sourceFilesBySuffices self [ ".board" ".cmake" ".conf" ".defconfig" ".dts" ".dtsi" ".json" ".keymap" ".overlay" ".shield" ".yml" "_defconfig" ];
+              pkgs.just
+              pkgs.yq 
 
-        board = "seeeduino_xiao_ble";
-        shield = "caleboard_%PART%";
+              # keymap_drawer
+            ];
 
-        zephyrDepsHash = "sha256-zRJ00mdUcBLC8T5Anuq5SCWoYOCdlNcEhlT/GqkJlVk=";
-
-        meta = {
-          description = "ZMK firmware";
-          license = nixpkgs.lib.licenses.mit;
-          platforms = nixpkgs.lib.platforms.all;
+          shellHook = ''
+            export ZMK_BUILD_DIR=$(pwd)/.build;
+            export ZMK_SRC_DIR=$(pwd)/zmk/app;
+            export Zephyr_DIR=$(pwd)/zephyr;
+          '';
         };
-      };
-
-      flash = zmk-nix.packages.${system}.flash.override { inherit firmware; };
-      update = zmk-nix.packages.${system}.update;
-    });
-
-    devShells = forAllSystems (system: {
-      default = zmk-nix.devShells.${system}.default;
-    });
+      }
+    );
   };
 }
