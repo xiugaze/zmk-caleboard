@@ -8,13 +8,25 @@
   quick-tap-ms = <150>;
   hold-trigger-key-positions = <0>;
 };
+
 &lt { // layer tap
   flavor = "balanced";
   tapping-term-ms = <200>;
   quick-tap-ms = <175>;
 };
 
+
+
 / {
+  rpi: require_prior_idle {
+    compatible = "zmk,behavior-hold-tap";
+    #binding-cells = <2>;
+    flavor = "tap-preferred";
+    tapping-term-ms = <200>;
+    quick-tap-ms = <200>;
+    require-prior-idle-ms = <125>;
+    bindings = <&kp>, <&kp>;
+  };
   keymap {
     compatible = "zmk,keymap";
     // -----------------------------------------------------------------------------------------
@@ -25,7 +37,7 @@
     default_layer {
       bindings = <
         &kp TAB      &kp Q      &kp W      &kp E       &kp R       &kp T           &kp Y       &kp U        &kp I        &kp O       &kp P         &kp BSPC
-        &mt CLCK ESC &mt LGUI A &mt LALT S &mt LSHFT D &mt LCTRL F &kp G           &kp H       &mt RCTRL J  &mt RSHFT K  &mt RALT L  &mt RGUI SEMI &kp SQT
+        &mt CLCK ESC &rpi LGUI A &rpi LALT S &rpi LSHFT D &rpi LCTRL F &kp G           &kp H       &rpi RCTRL J  &rpi RSHFT K  &rpi RALT L  &rpi RGUI SEMI &kp SQT
         &kp LSHFT    &kp Z      &kp X      &kp C       &kp V       &kp B           &kp N       &kp M        &kp COMMA    &kp DOT     &kp FSLH     &kp ESC
                                                       &kp TAB     &lt 1 RET        &lt 2 SPACE &kp BSPC
       >;
